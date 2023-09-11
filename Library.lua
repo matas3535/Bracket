@@ -244,7 +244,6 @@ function Assets:Window(ScreenAsset,Window)
 		Window.Size = Size
 	end)
 
-	task.spawn(Assets.Snowflakes,WindowAsset)
 	WindowAsset.TabButtonContainer.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 		WindowAsset.TabButtonContainer.CanvasSize = UDim2.fromOffset(
 			WindowAsset.TabButtonContainer.ListLayout.AbsoluteContentSize.X,0
