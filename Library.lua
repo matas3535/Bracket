@@ -1,4 +1,4 @@
-local Color3_fromHex, Color3_fromHSV, Color3_fromRGB, Color3_new, Colorpicker_Callback, Instance_new, Keybind_Callback, math_clamp, math_floor, Notification_Callback, Option_Callback, os_clock, Random_new, Slider_Callback, string_find, string_format, string_gsub, string_rep, string_split, table_clear, table_concat, table_find, table_remove, task_spawn, task_wait, Textbox_Callback, Toggle_Callback, UDim2_fromScale, utf8_char, tonumber, loadstring, delfile, UDim2_new, sethiddenproperty, tostring, readfile, writefile, isfile, listfiles, makefolder, isfolder, math_max, OnStop, OnTick, UDim2_fromOffset, Vector2_new, setmetatable, ipairs, table_insert, typeof, type, pairs = Color3.fromHex, Color3.fromHSV, Color3.fromRGB, Color3.new, Colorpicker.Callback, Instance.new, Keybind.Callback, math.clamp, math.floor, Notification.Callback, Option.Callback, os.clock, Random.new, Slider.Callback, string.find, string.format, string.gsub, string.rep, string.split, table.clear, table.concat, table.find, table.remove, task.spawn, task.wait, Textbox.Callback, Toggle.Callback, UDim2.fromScale, utf8.char, tonumber, loadstring, delfile, UDim2.new, sethiddenproperty, tostring, readfile, writefile, isfile, listfiles, makefolder, isfolder, math.max, OnStop, OnTick, UDim2.fromOffset, Vector2.new, setmetatable, ipairs, table.insert, typeof, type, pairs
+local Color3_fromHex, Color3_fromHSV, Color3_fromRGB, Color3_new, Instance_new, math_clamp, math_floor, os_clock, Random_new, string_find, string_format, string_gsub, string_rep, string_split, table_clear, table_concat, table_find, table_remove, task_spawn, task_wait, UDim2_fromScale, utf8_char, tonumber, loadstring, delfile, UDim2_new, sethiddenproperty, tostring, readfile, writefile, isfile, listfiles, makefolder, isfolder, math_max, OnStop, OnTick, UDim2_fromOffset, Vector2_new, setmetatable, ipairs, table_insert, typeof, type, pairs = Color3.fromHex, Color3.fromHSV, Color3.fromRGB, Color3.new, Instance.new, math.clamp, math.floor, os.clock, Random.new, string.find, string.format, string.gsub, string.rep, string.split, table.clear, table.concat, table.find, table.remove, task.spawn, task.wait, UDim2.fromScale, utf8.char, tonumber, loadstring, delfile, UDim2.new, sethiddenproperty, tostring, readfile, writefile, isfile, listfiles, makefolder, isfolder, math.max, OnStop, OnTick, UDim2.fromOffset, Vector2.new, setmetatable, ipairs, table.insert, typeof, type, pairs
 --
 local Utility = {
 	Backgrounds = {
@@ -25,7 +25,7 @@ local CoreGui = game:GetService("CoreGui")
 local IsLocal,Assets,LocalPlayer = false,{},PlayerService.LocalPlayer
 local MainAssetFolder = InsertService:LoadLocalAsset("rbxassetid://14751313880")
 --
-function Cheat:Event(Type, Function)
+function Utility:Event(Type, Function)
 	local Event = {
 		Connection = Type:Connect(Function),
 		Function = Function
@@ -677,7 +677,7 @@ Toggle.ColorConfig[1] = Value
 ToggleAsset.Tick.BackgroundColor3 = Value
 and Window.Color or Color3_fromRGB(60,60,60)
 Window.Flags[Toggle.Flag] = Value
-Toggle_Callback(Value)
+Toggle.Callback(Value)
 end)
 
 function Toggle:ToolTip(Text)
@@ -768,7 +768,7 @@ SliderAsset.Value.PlaceholderText = #Slider.Unit == 0
 and Value or Value .. " " .. Slider.Unit
 
 Window.Flags[Slider.Flag] = Value
-Slider_Callback(Value)
+Slider.Callback(Value)
 end)
 
 function Slider:ToolTip(Text)
@@ -828,7 +828,7 @@ TextboxAsset.Background.Size = UDim2_new(1,0,0,Input.TextSize + 2)
 TextboxAsset.Size = UDim2_new(1,0,0,TextboxAsset.Title.Size.Y.Offset + TextboxAsset.Background.Size.Y.Offset)
 
 Window.Flags[Textbox.Flag] = Value
-Textbox_Callback(Value,Textbox.EnterPressed)
+Textbox.Callback(Value,Textbox.EnterPressed)
 end)
 
 function Textbox:ToolTip(Text)
@@ -862,7 +862,7 @@ Keybind.Value = Key
 elseif Input.UserInputType.Name == "Keyboard" then
 if Key == Keybind.Value then
 	Keybind.Toggle = not Keybind.Toggle
-	Keybind_Callback(Keybind.Value,true,Keybind.Toggle)
+	Keybind.Callback(Keybind.Value,true,Keybind.Toggle)
 end
 end
 if Keybind.Mouse then Key = Input.UserInputType.Name
@@ -874,7 +874,7 @@ or Key == "MouseButton2"
 or Key == "MouseButton3" then
 	if Key == Keybind.Value then
 		Keybind.Toggle = not Keybind.Toggle
-		Keybind_Callback(Keybind.Value,true,Keybind.Toggle)
+		Keybind.Callback(Keybind.Value,true,Keybind.Toggle)
 	end
 end
 end
@@ -883,7 +883,7 @@ Cheat:Event(UserInputService.InputEnded, function(Input)
 local Key = Input.KeyCode.Name
 if Input.UserInputType.Name == "Keyboard" then
 if Key == Keybind.Value then
-	Keybind_Callback(Keybind.Value,false,Keybind.Toggle)
+	Keybind.Callback(Keybind.Value,false,Keybind.Toggle)
 end
 end
 if Keybind.Mouse then Key = Input.UserInputType.Name
@@ -891,7 +891,7 @@ if Key == "MouseButton1"
 or Key == "MouseButton2"
 or Key == "MouseButton3" then
 if Key == Keybind.Value then
-	Keybind_Callback(Keybind.Value,false,Keybind.Toggle)
+	Keybind.Callback(Keybind.Value,false,Keybind.Toggle)
 end
 end
 end
@@ -914,7 +914,7 @@ KeybindAsset.Value.Text = "[ " .. tostring(Value) .. " ]"
 
 Keybind.WaitingForBind = false
 Window.Flags[Keybind.Flag] = Value
-Keybind_Callback(Value,false,Keybind.Toggle)
+Keybind.Callback(Value,false,Keybind.Toggle)
 end)
 
 function Keybind:ToolTip(Text)
@@ -943,7 +943,7 @@ Keybind.Value = Key
 elseif Input.UserInputType.Name == "Keyboard" then
 if Key == Keybind.Value then
 if not Keybind.DisableToggle then Toggle.Value = not Toggle.Value end
-Keybind_Callback(Keybind.Value,true,Toggle.Value)
+Keybind.Callback(Keybind.Value,true,Toggle.Value)
 end
 end
 if Keybind.Mouse then Key = Input.UserInputType.Name
@@ -955,7 +955,7 @@ or Key == "MouseButton2"
 or Key == "MouseButton3" then
 if Key == Keybind.Value then
 	if not Keybind.DisableToggle then Toggle.Value = not Toggle.Value end
-	Keybind_Callback(Keybind.Value,true,Toggle.Value)
+	Keybind.Callback(Keybind.Value,true,Toggle.Value)
 end
 end
 end
@@ -964,7 +964,7 @@ Cheat:Event(UserInputService.InputEnded, function(Input)
 local Key = Input.KeyCode.Name
 if Input.UserInputType.Name == "Keyboard" then
 if Key == Keybind.Value then
-Keybind_Callback(Keybind.Value,false,Toggle.Value)
+Keybind.Callback(Keybind.Value,false,Toggle.Value)
 end
 end
 if Keybind.Mouse then Key = Input.UserInputType.Name
@@ -972,7 +972,7 @@ if Key == "MouseButton1"
 or Key == "MouseButton2"
 or Key == "MouseButton3" then
 if Key == Keybind.Value then
-Keybind_Callback(Keybind.Value,false,Toggle.Value)
+Keybind.Callback(Keybind.Value,false,Toggle.Value)
 end
 end
 end
@@ -992,7 +992,7 @@ KeybindAsset.Text = "[ " .. tostring(Value) .. " ]"
 
 Keybind.WaitingForBind = false
 Window.Flags[Keybind.Flag] = Value
-Keybind_Callback(Value,false,Toggle.Value)
+Keybind.Callback(Value,false,Toggle.Value)
 end)
 end
 function Assets:Dropdown(Parent,ScreenAsset,Window,Dropdown)
@@ -1009,22 +1009,23 @@ DropdownAsset.Title.Text = Dropdown.Name
 DropdownAsset.Title.Visible = not Dropdown.HideName
 
 Cheat:Event(DropdownAsset.MouseButton1Click, function()
-if not OptionContainerAsset.Visible and OptionContainerAsset.ListLayout.AbsoluteContentSize.Y ~= 0 then
-ContainerRender = Cheat:Event(RunService.RenderStepped, function()
-if not OptionContainerAsset.Visible then ContainerRender:Disconnect() end
+	if not OptionContainerAsset.Visible and OptionContainerAsset.ListLayout.AbsoluteContentSize.Y ~= 0 then
+		ContainerRender = RunService.RenderStepped:Connect(function()
+			if not OptionContainerAsset.Visible then ContainerRender:Disconnect() end
 
-OptionContainerAsset.Position = UDim2_fromOffset(
-DropdownAsset.Background.AbsolutePosition.X + 1,
-DropdownAsset.Background.AbsolutePosition.Y + DropdownAsset.Background.AbsoluteSize.Y + 40
-)
-OptionContainerAsset.Size = UDim2_fromOffset(
-DropdownAsset.Background.AbsoluteSize.X,
-math_clamp(OptionContainerAsset.ListLayout.AbsoluteContentSize.Y,16,112) + 4
-end)
-OptionContainerAsset.Visible = true
-else
-OptionContainerAsset.Visible = false
-end
+			OptionContainerAsset.Position = UDim2.fromOffset(
+				DropdownAsset.Background.AbsolutePosition.X + 1,
+				DropdownAsset.Background.AbsolutePosition.Y + DropdownAsset.Background.AbsoluteSize.Y + 40
+			)
+			OptionContainerAsset.Size = UDim2.fromOffset(
+				DropdownAsset.Background.AbsoluteSize.X,
+				math.clamp(OptionContainerAsset.ListLayout.AbsoluteContentSize.Y,16,112) + 4
+			)
+		end)
+		OptionContainerAsset.Visible = true
+	else
+		OptionContainerAsset.Visible = false
+	end
 end)
 Cheat:Event(DropdownAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 DropdownAsset.Title.Size = Dropdown.HideName and UDim2_fromScale(1,0)
@@ -1062,7 +1063,7 @@ Option = GetType(Option,{},"table",true)
 Option.Name = GetType(Option.Name,"Option","string")
 Option.Mode = GetType(Option.Mode,"Button","string")
 Option.Value = GetType(Option.Value,false,"boolean")
-Option_Callback = GetType(Option_Callback,function() end,"function")
+Option.Callback = GetType(Option.Callback,function() end,"function")
 
 local OptionAsset = GetAsset("Dropdown/Option")
 Option.Object = OptionAsset
@@ -1100,7 +1101,7 @@ RefreshSelected()
 Option.ColorConfig[1] = Value
 Option.Object.Tick.BackgroundColor3 = Value
 and Window.Color or Color3_fromRGB(60,60,60)
-Option_Callback(Dropdown.Value,Option)
+Option.Callback(Dropdown.Value,Option)
 end)
 
 for Index,Value in pairs(Option.Internal) do
@@ -1314,7 +1315,7 @@ if Colorpicker.Value[5] then
 		Colorpicker.Value[6] = TableToColor(Colorpicker.Value)
 		ColorpickerAsset.Color.BackgroundColor3 = Colorpicker.Value[6]
 		Window.Flags[Colorpicker.Flag] = Colorpicker.Value
-		Colorpicker_Callback(Colorpicker.Value,Colorpicker.Value[6])
+		Colorpicker.Callback(Colorpicker.Value,Colorpicker.Value[6])
 	end
 end
 end)
@@ -1341,7 +1342,7 @@ PaletteAsset.Alpha.BackgroundColor3 = Value[6]
 PaletteAsset.RGB.RGBBox.PlaceholderText = ColorToString(Value[6])
 PaletteAsset.HEX.HEXBox.PlaceholderText = Value[6]:ToHex()
 Window.Flags[Colorpicker.Flag] = Value
-Colorpicker_Callback(Value,Value[6])
+Colorpicker.Callback(Value,Value[6])
 end) Colorpicker.Value = Colorpicker.Value
 
 function Colorpicker:ToolTip(Text)
@@ -1468,7 +1469,7 @@ if Colorpicker.Value[5] then
 		Colorpicker.Value[6] = TableToColor(Colorpicker.Value)
 		ColorpickerAsset.BackgroundColor3 = Colorpicker.Value[6]
 		Window.Flags[Colorpicker.Flag] = Colorpicker.Value
-		Colorpicker_Callback(Colorpicker.Value,Colorpicker.Value[6])
+		Colorpicker.Callback(Colorpicker.Value,Colorpicker.Value[6])
 	end
 end
 end)
@@ -1491,7 +1492,7 @@ PaletteAsset.Alpha.BackgroundColor3 = Value[6]
 PaletteAsset.RGB.RGBBox.PlaceholderText = ColorToString(Value[6])
 PaletteAsset.HEX.HEXBox.PlaceholderText = Value[6]:ToHex()
 Window.Flags[Colorpicker.Flag] = Value
-Colorpicker_Callback(Value,Value[6])
+Colorpicker.Callback(Value,Value[6])
 end) Colorpicker.Value = Colorpicker.Value
 end
 
@@ -1613,7 +1614,7 @@ function Window:Tab(Tab)
 		Toggle.Flag = GetType(Toggle.Flag,Toggle.Name,"string")
 
 		Toggle.Value = GetType(Toggle.Value,false,"boolean")
-		Toggle_Callback = GetType(Toggle_Callback,function() end,"function")
+		Toggle.Callback = GetType(Toggle.Callback,function() end,"function")
 		Window.Elements[#Window.Elements + 1] = Toggle
 		Window.Flags[Toggle.Flag] = Toggle.Value
 
@@ -1624,7 +1625,7 @@ function Window:Tab(Tab)
 
 			Keybind.Value = GetType(Keybind.Value,"NONE","string")
 			Keybind.Mouse = GetType(Keybind.Mouse,false,"boolean")
-			Keybind_Callback = GetType(Keybind_Callback,function() end,"function")
+			Keybind.Callback = GetType(Keybind.Callback,function() end,"function")
 			Keybind.Blacklist = GetType(Keybind.Blacklist,{"W","A","S","D","Slash","Tab","Backspace","Escape","Space","Delete","Unknown","Backquote"},"table")
 			Window.Elements[#Window.Elements + 1] = Keybind
 			Window.Flags[Keybind.Flag] = Keybind.Value
@@ -1637,7 +1638,7 @@ function Window:Tab(Tab)
 			Colorpicker.Flag = GetType(Colorpicker.Flag,Toggle.Flag .. "/Colorpicker","string")
 
 			Colorpicker.Value = GetType(Colorpicker.Value,{1,1,1,0,false},"table")
-			Colorpicker_Callback = GetType(Colorpicker_Callback,function() end,"function")
+			Colorpicker.Callback = GetType(Colorpicker.Callback,function() end,"function")
 			Window.Elements[#Window.Elements + 1] = Colorpicker
 			Window.Flags[Colorpicker.Flag] = Colorpicker.Value
 
@@ -1656,7 +1657,7 @@ function Window:Tab(Tab)
 		Slider.Precise = GetType(Slider.Precise,0,"number")
 		Slider.Unit = GetType(Slider.Unit,"","string")
 		Slider.Value = GetType(Slider.Value,Slider.Max / 2,"number")
-		Slider_Callback = GetType(Slider_Callback,function() end,"function")
+		Slider.Callback = GetType(Slider.Callback,function() end,"function")
 		Window.Elements[#Window.Elements + 1] = Slider
 		Window.Flags[Slider.Flag] = Slider.Value
 
@@ -1671,7 +1672,7 @@ function Window:Tab(Tab)
 		Textbox.Value = GetType(Textbox.Value,"","string")
 		Textbox.NumbersOnly = GetType(Textbox.NumbersOnly,false,"boolean")
 		Textbox.Placeholder = GetType(Textbox.Placeholder,"Input here","string")
-		Textbox_Callback = GetType(Textbox_Callback,function() end,"function")
+		Textbox.Callback = GetType(Textbox.Callback,function() end,"function")
 		Window.Elements[#Window.Elements + 1] = Textbox
 		Window.Flags[Textbox.Flag] = Textbox.Value
 
@@ -1685,7 +1686,7 @@ function Window:Tab(Tab)
 
 		Keybind.Value = GetType(Keybind.Value,"NONE","string")
 		Keybind.Mouse = GetType(Keybind.Mouse,false,"boolean")
-		Keybind_Callback = GetType(Keybind_Callback,function() end,"function")
+		Keybind.Callback = GetType(Keybind.Callback,function() end,"function")
 		Keybind.Blacklist = GetType(Keybind.Blacklist,{"W","A","S","D","Slash","Tab","Backspace","Escape","Space","Delete","Unknown","Backquote"},"table")
 		Window.Elements[#Window.Elements + 1] = Keybind
 		Window.Flags[Keybind.Flag] = Keybind.Value
@@ -1710,7 +1711,7 @@ function Window:Tab(Tab)
 		Colorpicker.Flag = GetType(Colorpicker.Flag,Colorpicker.Name,"string")
 
 		Colorpicker.Value = GetType(Colorpicker.Value,{1,1,1,0,false},"table")
-		Colorpicker_Callback = GetType(Colorpicker_Callback,function() end,"function")
+		Colorpicker.Callback = GetType(Colorpicker.Callback,function() end,"function")
 		Window.Elements[#Window.Elements + 1] = Colorpicker
 		Window.Flags[Colorpicker.Flag] = Colorpicker.Value
 
@@ -1747,7 +1748,7 @@ function Window:Tab(Tab)
 			Toggle.Flag = GetType(Toggle.Flag,Toggle.Name,"string")
 
 			Toggle.Value = GetType(Toggle.Value,false,"boolean")
-			Toggle_Callback = GetType(Toggle_Callback,function() end,"function")
+			Toggle.Callback = GetType(Toggle.Callback,function() end,"function")
 			Window.Elements[#Window.Elements + 1] = Toggle
 			Window.Flags[Toggle.Flag] = Toggle.Value
 
@@ -1758,7 +1759,7 @@ function Window:Tab(Tab)
 
 				Keybind.Value = GetType(Keybind.Value,"NONE","string")
 				Keybind.Mouse = GetType(Keybind.Mouse,false,"boolean")
-				Keybind_Callback = GetType(Keybind_Callback,function() end,"function")
+				Keybind.Callback = GetType(Keybind.Callback,function() end,"function")
 				Keybind.Blacklist = GetType(Keybind.Blacklist,{"W","A","S","D","Slash","Tab","Backspace","Escape","Space","Delete","Unknown","Backquote"},"table")
 				Window.Elements[#Window.Elements + 1] = Keybind
 				Window.Flags[Keybind.Flag] = Keybind.Value
@@ -1771,7 +1772,7 @@ function Window:Tab(Tab)
 				Colorpicker.Flag = GetType(Colorpicker.Flag,Toggle.Flag .. "/Colorpicker","string")
 
 				Colorpicker.Value = GetType(Colorpicker.Value,{1,1,1,0,false},"table")
-				Colorpicker_Callback = GetType(Colorpicker_Callback,function() end,"function")
+				Colorpicker.Callback = GetType(Colorpicker.Callback,function() end,"function")
 				Window.Elements[#Window.Elements + 1] = Colorpicker
 				Window.Flags[Colorpicker.Flag] = Colorpicker.Value
 
@@ -1790,7 +1791,7 @@ function Window:Tab(Tab)
 			Slider.Precise = GetType(Slider.Precise,0,"number")
 			Slider.Unit = GetType(Slider.Unit,"","string")
 			Slider.Value = GetType(Slider.Value,Slider.Max / 2,"number")
-			Slider_Callback = GetType(Slider_Callback,function() end,"function")
+			Slider.Callback = GetType(Slider.Callback,function() end,"function")
 			Window.Elements[#Window.Elements + 1] = Slider
 			Window.Flags[Slider.Flag] = Slider.Value
 
@@ -1805,7 +1806,7 @@ function Window:Tab(Tab)
 			Textbox.Value = GetType(Textbox.Value,"","string")
 			Textbox.NumbersOnly = GetType(Textbox.NumbersOnly,false,"boolean")
 			Textbox.Placeholder = GetType(Textbox.Placeholder,"Input here","string")
-			Textbox_Callback = GetType(Textbox_Callback,function() end,"function")
+			Textbox.Callback = GetType(Textbox.Callback,function() end,"function")
 			Window.Elements[#Window.Elements + 1] = Textbox
 			Window.Flags[Textbox.Flag] = Textbox.Value
 
@@ -1819,7 +1820,7 @@ function Window:Tab(Tab)
 
 			Keybind.Value = GetType(Keybind.Value,"NONE","string")
 			Keybind.Mouse = GetType(Keybind.Mouse,false,"boolean")
-			Keybind_Callback = GetType(Keybind_Callback,function() end,"function")
+			Keybind.Callback = GetType(Keybind.Callback,function() end,"function")
 			Keybind.Blacklist = GetType(Keybind.Blacklist,{"W","A","S","D","Slash","Tab","Backspace","Escape","Space","Delete","Unknown","Backquote"},"table")
 			Window.Elements[#Window.Elements + 1] = Keybind
 			Window.Flags[Keybind.Flag] = Keybind.Value
@@ -1844,7 +1845,7 @@ function Window:Tab(Tab)
 			Colorpicker.Flag = GetType(Colorpicker.Flag,Colorpicker.Name,"string")
 
 			Colorpicker.Value = GetType(Colorpicker.Value,{1,1,1,0,false},"table")
-			Colorpicker_Callback = GetType(Colorpicker_Callback,function() end,"function")
+			Colorpicker.Callback = GetType(Colorpicker.Callback,function() end,"function")
 			Window.Elements[#Window.Elements + 1] = Colorpicker
 			Window.Flags[Colorpicker.Flag] = Colorpicker.Value
 
@@ -1885,8 +1886,8 @@ if Notification.Duration then
 	NotificationAsset.Title.Close.Text = 0
 
 	NotificationAsset:Destroy()
-	if Notification_Callback then
-		Notification_Callback()
+	if Notification.Callback then
+		Notification.Callback()
 	end
 	end)
 else
@@ -1926,7 +1927,7 @@ end
 
 TweenSize(NotificationAsset.Main.Size.X.Offset + 4,NotificationAsset.Main.Size.Y.Offset + 4,function()
 task_wait(Notification.Duration) TweenSize(0,NotificationAsset.Main.Size.Y.Offset + 4,function()
-NotificationAsset:Destroy() if Notification_Callback then Notification_Callback() end
+NotificationAsset:Destroy() if Notification.Callback then Notification.Callback() end
 end)
 end)
 end
