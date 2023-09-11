@@ -41,7 +41,7 @@ function Utility:Event(Type, Function)
 		Event = nil
 	end
 	--
-	Cheat.Events[Event] = true
+	Utility.Events[Event] = true
 	--
 	return Event
 end
