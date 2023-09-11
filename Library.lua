@@ -527,9 +527,9 @@ function Assets.Snowflakes(WindowAsset)
 
 	Emitter.OnSpawn = function(Particle)
 		local RandomPosition = NewRandom:NextNumber()
-		local RandomSize = NewRandom:NextInteger(10,50)
-		local RandomYVelocity = NewRandom:NextInteger(10,50)
-		local RandomXVelocity = NewRandom:NextInteger(-50,50)
+		local RandomSize = NewRandom:NextInteger(5,25)
+		local RandomYVelocity = NewRandom:NextInteger(20,100)
+		local RandomXVelocity = NewRandom:NextInteger(-100,100)
 
 		Particle.Object.ImageTransparency = RandomSize / 50
 		Particle.Object.Size = UDim2.fromOffset(RandomSize,RandomSize)
