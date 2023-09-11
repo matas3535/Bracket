@@ -117,20 +117,20 @@ end
 
 local function MakeDraggable(Dragger,Object,OnTick,OnStop)
 	local StartPosition,StartDrag = nil,nil
-	Cheat:Event(Dragger.InputBegan, function(Input)
+	Utility:Event(Dragger.InputBegan, function(Input)
 	if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 		StartPosition = UserInputService:GetMouseLocation()
 		StartDrag = Object.AbsolutePosition
 	end
 	end)
-	Cheat:Event(UserInputService.InputChanged, function(Input)
+	Utility:Event(UserInputService.InputChanged, function(Input)
 	if StartDrag and Input.UserInputType == Enum.UserInputType.MouseMovement then
 		local Mouse = UserInputService:GetMouseLocation()
 		local Delta = Mouse - StartPosition StartPosition = Mouse
 		OnTick(Object.Position + UDim2_fromOffset(Delta.X,Delta.Y))
 	end
 	end)
-	Cheat:Event(Dragger.InputEnded, function(Input)
+	Utility:Event(Dragger.InputEnded, function(Input)
 	if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 		StartPosition,StartDrag = nil,nil
 		if OnStop then OnStop(Object.Position) end
@@ -139,13 +139,13 @@ local function MakeDraggable(Dragger,Object,OnTick,OnStop)
 end
 local function MakeResizeable(Dragger,Object,MinSize,OnTick,OnStop)
 	local StartPosition,StartSize = nil,nil
-	Cheat:Event(Dragger.InputBegan, function(Input)
+	Utility:Event(Dragger.InputBegan, function(Input)
 	if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 		StartPosition = UserInputService:GetMouseLocation()
 		StartSize = Object.AbsoluteSize
 	end
 	end)
-	Cheat:Event(UserInputService.InputChanged, function(Input)
+	Utility:Event(UserInputService.InputChanged, function(Input)
 	if StartPosition and Input.UserInputType == Enum.UserInputType.MouseMovement then
 		local Mouse = UserInputService:GetMouseLocation()
 		local Delta = Mouse - StartPosition
@@ -156,7 +156,7 @@ local function MakeResizeable(Dragger,Object,MinSize,OnTick,OnStop)
 		OnTick(UDim2_fromOffset(SizeX,SizeY))
 	end
 	end)
-	Cheat:Event(Dragger.InputEnded, function(Input)
+	Utility:Event(Dragger.InputEnded, function(Input)
 	if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 		StartPosition,StartSize = nil,nil
 		if OnStop then OnStop(Object.Size) end
@@ -278,13 +278,13 @@ function Assets:Window(ScreenAsset,Window)
 	Window.Size = Size
 	end)
 
-	Cheat:Event(WindowAsset.TabButtonContainer.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+	Utility:Event(WindowAsset.TabButtonContainer.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 	WindowAsset.TabButtonContainer.CanvasSize = UDim2_fromOffset(
 	WindowAsset.TabButtonContainer.ListLayout.AbsoluteContentSize.X,0
 	)
 	end)
 
-	Cheat:Event(UserInputService.InputChanged, function(Input)
+	Utility:Event(UserInputService.InputChanged, function(Input)
 	if WindowAsset.Visible and Input.UserInputType == Enum.UserInputType.MouseMovement then
 		local Mouse = UserInputService:GetMouseLocation()
 		ScreenAsset.ToolTip.Position = UDim2_fromOffset(
@@ -292,11 +292,11 @@ function Assets:Window(ScreenAsset,Window)
 		)
 	end
 	end)
-	Cheat:Event(RunService.RenderStepped, function()
+	Utility:Event(RunService.RenderStepped, function()
 	Window.RainbowHue = os_clock() % Window.RainbowSpeed / Window.RainbowSpeed
 	end)
 
-	Cheat:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
+	Utility:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
 	WindowAsset.Visible = Enabled
 
 	if not IsLocal then RunService:SetRobloxGuiFocused(Enabled and Window.Blur) end
@@ -308,19 +308,19 @@ function Assets:Window(ScreenAsset,Window)
 		end
 	end
 	end)
-	Cheat:Event(Window:GetPropertyChangedSignal("Blur"), function(Blur)
+	Utility:Event(Window:GetPropertyChangedSignal("Blur"), function(Blur)
 	if not IsLocal then RunService:SetRobloxGuiFocused(Window.Enabled and Blur) end
 	end)
-	Cheat:Event(Window:GetPropertyChangedSignal("Name"), function(Name)
+	Utility:Event(Window:GetPropertyChangedSignal("Name"), function(Name)
 	WindowAsset.Title.Text = Name
 	end)
-	Cheat:Event(Window:GetPropertyChangedSignal("Position"), function(Position)
+	Utility:Event(Window:GetPropertyChangedSignal("Position"), function(Position)
 	WindowAsset.Position = Position
 	end)
-	Cheat:Event(Window:GetPropertyChangedSignal("Size"), function(Size)
+	Utility:Event(Window:GetPropertyChangedSignal("Size"), function(Size)
 	WindowAsset.Size = Size
 	end)
-	Cheat:Event(Window:GetPropertyChangedSignal("Color"), function(Color)
+	Utility:Event(Window:GetPropertyChangedSignal("Color"), function(Color)
 	for Object,ColorConfig in pairs(Window.Colorable) do
 		if ColorConfig[1] then Object[ColorConfig[2]] = Color end
 	end
@@ -364,17 +364,17 @@ function Assets:Window(ScreenAsset,Window)
 		}
 		end)
 
-		Cheat:Event(Watermark:GetPropertyChangedSignal("Enabled"), function(Enabled)
+		Utility:Event(Watermark:GetPropertyChangedSignal("Enabled"), function(Enabled)
 		ScreenAsset.Watermark.Visible = Enabled
 		end)
-		Cheat:Event(Watermark:GetPropertyChangedSignal("Title"), function(Title)
+		Utility:Event(Watermark:GetPropertyChangedSignal("Title"), function(Title)
 		ScreenAsset.Watermark.Text = Title
 		ScreenAsset.Watermark.Size = UDim2_fromOffset(
 		ScreenAsset.Watermark.TextBounds.X + 6,
 		ScreenAsset.Watermark.TextBounds.Y + 6
 		)
 		end)
-		Cheat:Event(Watermark:GetPropertyChangedSignal("Value"), function(Value)
+		Utility:Event(Watermark:GetPropertyChangedSignal("Value"), function(Value)
 		if type(Value) ~= "table" then return end
 		ScreenAsset.Watermark.Position = UDim2_new(
 		Value[1],Value[2],
@@ -493,15 +493,15 @@ function Assets:Tab(ScreenAsset,WindowAsset,Window,Tab)
 	TabButtonAsset.Size = UDim2_new(0,TabButtonAsset.TextBounds.X + 12,1,-1)
 	TabButtonAsset.Parent = WindowAsset.TabButtonContainer
 
-	Cheat:Event(TabAsset.LeftSide.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+	Utility:Event(TabAsset.LeftSide.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 	local Side = GetLongestSide(TabAsset)
 	TabAsset.CanvasSize = UDim2_fromOffset(0,Side.ListLayout.AbsoluteContentSize.Y + 21)
 	end)
-	Cheat:Event(TabAsset.RightSide.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+	Utility:Event(TabAsset.RightSide.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 	local Side = GetLongestSide(TabAsset)
 	TabAsset.CanvasSize = UDim2_fromOffset(0,Side.ListLayout.AbsoluteContentSize.Y + 21)
 	end)
-	Cheat:Event(TabButtonAsset.MouseButton1Click, function()
+	Utility:Event(TabButtonAsset.MouseButton1Click, function()
 	ChooseTab(ScreenAsset,TabButtonAsset,TabAsset)
 	end)
 
@@ -509,7 +509,7 @@ function Assets:Tab(ScreenAsset,WindowAsset,Window,Tab)
 		ChooseTab(ScreenAsset,TabButtonAsset,TabAsset)
 	end
 
-	Cheat:Event(Tab:GetPropertyChangedSignal("Name"), function(Name)
+	Utility:Event(Tab:GetPropertyChangedSignal("Name"), function(Name)
 	TabButtonAsset.Text = Name
 	TabButtonAsset.Size = UDim2_new(
 	0,TabButtonAsset.TextBounds.X + 12,
@@ -528,11 +528,11 @@ function Assets:Section(Parent,Section)
 	SectionAsset.Title.TextBounds.X + 6,2
 	)
 
-	Cheat:Event(SectionAsset.Container.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+	Utility:Event(SectionAsset.Container.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 	SectionAsset.Size = UDim2_new(1,0,0,SectionAsset.Container.ListLayout.AbsoluteContentSize.Y + 15)
 	end)
 
-	Cheat:Event(Section:GetPropertyChangedSignal("Name"), function(Name)
+	Utility:Event(Section:GetPropertyChangedSignal("Name"), function(Name)
 	SectionAsset.Title.Text = Name
 	SectionAsset.Title.Size = UDim2_fromOffset(
 	Section.Title.TextBounds.X + 6,2
@@ -542,14 +542,14 @@ function Assets:Section(Parent,Section)
 	return SectionAsset.Container
 end
 function Assets:ToolTip(Parent,ScreenAsset,Text)
-	Cheat:Event(Parent.MouseEnter, function()
+	Utility:Event(Parent.MouseEnter, function()
 	ScreenAsset.ToolTip.Text = Text
 	ScreenAsset.ToolTip.Size = UDim2_fromOffset(
 	ScreenAsset.ToolTip.TextBounds.X + 6,
 	ScreenAsset.ToolTip.TextBounds.Y + 6
 	) ScreenAsset.ToolTip.Visible = true
 	end)
-	Cheat:Event(Parent.MouseLeave, function()
+	Utility:Event(Parent.MouseLeave, function()
 	ScreenAsset.ToolTip.Visible = false
 	end)
 end
@@ -581,7 +581,7 @@ local DividerAsset = GetAsset("Divider/Divider")
 DividerAsset.Parent = Parent
 DividerAsset.Title.Text = Divider.Text
 
-Cheat:Event(DividerAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(DividerAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 if DividerAsset.Title.TextBounds.X > 0 then
 DividerAsset.Size = UDim2_new(1,0,0,DividerAsset.Title.TextBounds.Y)
 DividerAsset.Left.Size = UDim2_new(0.5,-(DividerAsset.Title.TextBounds.X / 2) - 6,0,2)
@@ -593,7 +593,7 @@ DividerAsset.Right.Size = UDim2_new(1,0,0,2)
 end
 end)
 
-Cheat:Event(Divider:GetPropertyChangedSignal("Text"), function(Text)
+Utility:Event(Divider:GetPropertyChangedSignal("Text"), function(Text)
 DividerAsset.Title.Text = Text
 end)
 end
@@ -603,11 +603,11 @@ local LabelAsset = GetAsset("Label/Label")
 LabelAsset.Parent = Parent
 LabelAsset.Text = Label.Text
 
-Cheat:Event(LabelAsset:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(LabelAsset:GetPropertyChangedSignal("TextBounds"), function()
 LabelAsset.Size = UDim2_new(1,0,0,LabelAsset.TextBounds.Y)
 end)
 
-Cheat:Event(Label:GetPropertyChangedSignal("Text"), function(Text)
+Utility:Event(Label:GetPropertyChangedSignal("Text"), function(Text)
 LabelAsset.Text = Text
 end)
 end
@@ -617,33 +617,33 @@ local ButtonAsset = GetAsset("Button/Button")
 Button.ColorConfig = {false,"BorderColor3"}
 Window.Colorable[ButtonAsset] = Button.ColorConfig
 
-Button.Connection = Cheat:Event(ButtonAsset.MouseButton1Click, Button.Callback)
+Button.Connection = Utility:Event(ButtonAsset.MouseButton1Click, Button.Callback)
 
 ButtonAsset.Parent = Parent
 ButtonAsset.Title.Text = Button.Name
 
-Cheat:Event(ButtonAsset.MouseButton1Down, function()
+Utility:Event(ButtonAsset.MouseButton1Down, function()
 Button.ColorConfig[1] = true
 ButtonAsset.BorderColor3 = Window.Color
 end)
-Cheat:Event(ButtonAsset.MouseButton1Up, function()
+Utility:Event(ButtonAsset.MouseButton1Up, function()
 Button.ColorConfig[1] = false
 ButtonAsset.BorderColor3 = Color3_new(0,0,0)
 end)
-Cheat:Event(ButtonAsset.MouseLeave, function()
+Utility:Event(ButtonAsset.MouseLeave, function()
 Button.ColorConfig[1] = false
 ButtonAsset.BorderColor3 = Color3_new(0,0,0)
 end)
-Cheat:Event(ButtonAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(ButtonAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 ButtonAsset.Size = UDim2_new(1,0,0,ButtonAsset.Title.TextBounds.Y + 2)
 end)
 
-Cheat:Event(Button:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Button:GetPropertyChangedSignal("Name"), function(Name)
 ButtonAsset.Title.Text = Name
 end)
-Cheat:Event(Button:GetPropertyChangedSignal("Callback"), function(Callback)
+Utility:Event(Button:GetPropertyChangedSignal("Callback"), function(Callback)
 Button.Connection:Disconnect()
-Button.Connection = Cheat:Event(ButtonAsset.MouseButton1Click, Callback)
+Button.Connection = Utility:Event(ButtonAsset.MouseButton1Click, Callback)
 end)
 
 function Button:ToolTip(Text)
@@ -661,18 +661,18 @@ ToggleAsset.Title.Text = Toggle.Name
 ToggleAsset.Tick.BackgroundColor3 = Toggle.Value
 and Window.Color or Color3_fromRGB(60,60,60)
 
-Cheat:Event(ToggleAsset.MouseButton1Click, function()
+Utility:Event(ToggleAsset.MouseButton1Click, function()
 Toggle.Value = not Toggle.Value
 end)
-Cheat:Event(ToggleAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(ToggleAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 ToggleAsset.Size = UDim2_new(1,0,0,ToggleAsset.Title.TextBounds.Y)
 ToggleAsset.Layout.Size = UDim2_new(1,-ToggleAsset.Title.TextBounds.X - 18,1,0)
 end)
 
-Cheat:Event(Toggle:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Toggle:GetPropertyChangedSignal("Name"), function(Name)
 ToggleAsset.Title.Text = Name
 end)
-Cheat:Event(Toggle:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(Toggle:GetPropertyChangedSignal("Value"), function(Value)
 Toggle.ColorConfig[1] = Value
 ToggleAsset.Tick.BackgroundColor3 = Value
 and Window.Color or Color3_fromRGB(60,60,60)
@@ -709,28 +709,28 @@ Slider.Value = Scale(ScaleX,0,1,Slider.Min,Slider.Max)
 end
 
 if Slider.Wide then
-Cheat:Event(SliderAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(SliderAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 SliderAsset.Value.Size = UDim2_new(0,SliderAsset.Value.TextBounds.X,1,0)
 SliderAsset.Title.Size = UDim2_new(1,-SliderAsset.Value.Size.X.Offset + 12,1,0)
 SliderAsset.Size = UDim2_new(1,0,0,SliderAsset.Title.TextBounds.Y + 2)
 end)
-Cheat:Event(SliderAsset.Value:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(SliderAsset.Value:GetPropertyChangedSignal("TextBounds"), function()
 SliderAsset.Value.Size = UDim2_new(0,SliderAsset.Value.TextBounds.X,1,0)
 SliderAsset.Title.Size = UDim2_new(1,-SliderAsset.Value.Size.X.Offset + 12,1,0)
 end)
 else
-Cheat:Event(SliderAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(SliderAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 SliderAsset.Value.Size = UDim2_fromOffset(SliderAsset.Value.TextBounds.X,16)
 SliderAsset.Title.Size = UDim2_new(1,-SliderAsset.Value.Size.X.Offset,0,16)
 SliderAsset.Size = UDim2_new(1,0,0,SliderAsset.Title.TextBounds.Y + 8)
 end)
-Cheat:Event(SliderAsset.Value:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(SliderAsset.Value:GetPropertyChangedSignal("TextBounds"), function()
 SliderAsset.Value.Size = UDim2_fromOffset(SliderAsset.Value.TextBounds.X,16)
 SliderAsset.Title.Size = UDim2_new(1,-SliderAsset.Value.Size.X.Offset,0,16)
 end)
 end
 
-Cheat:Event(SliderAsset.Value.FocusLost, function()
+Utility:Event(SliderAsset.Value.FocusLost, function()
 if not tonumber(SliderAsset.Value.Text) then
 SliderAsset.Value.Text = Slider.Value
 elseif tonumber(SliderAsset.Value.Text) <= Slider.Min then
@@ -741,27 +741,27 @@ end
 Slider.Value = SliderAsset.Value.Text
 SliderAsset.Value.Text = ""
 end)
-Cheat:Event(SliderAsset.InputBegan, function(Input)
+Utility:Event(SliderAsset.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 AttachToMouse(Input)
 Slider.Active = true
 end
 end)
-Cheat:Event(SliderAsset.InputEnded, function(Input)
+Utility:Event(SliderAsset.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 Slider.Active = false
 end
 end)
-Cheat:Event(UserInputService.InputChanged, function(Input)
+Utility:Event(UserInputService.InputChanged, function(Input)
 if Slider.Active and Input.UserInputType == Enum.UserInputType.MouseMovement then
 AttachToMouse(Input)
 end
 end)
 
-Cheat:Event(Slider:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Slider:GetPropertyChangedSignal("Name"), function(Name)
 SliderAsset.Title.Text = Name
 end)
-Cheat:Event(Slider:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(Slider:GetPropertyChangedSignal("Value"), function(Value)
 Value = tonumber(string_format("%." .. Slider.Precise .. "f",Value))
 SliderAsset.Background.Bar.Size = UDim2_fromScale(Scale(Value,Slider.Min,Slider.Max,0,1),1)
 SliderAsset.Value.PlaceholderText = #Slider.Unit == 0
@@ -785,14 +785,14 @@ TextboxAsset.Background.Input.Text = Textbox.Value
 TextboxAsset.Background.Input.PlaceholderText = Textbox.Placeholder
 TextboxAsset.Title.Visible = not Textbox.HideName
 
-Cheat:Event(TextboxAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(TextboxAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 TextboxAsset.Title.Size = Textbox.HideName and UDim2_fromScale(1,0)
 or UDim2_new(1,0,0,TextboxAsset.Title.TextBounds.Y + 2)
 
 TextboxAsset.Background.Position = UDim2_new(0.5,0,0,TextboxAsset.Title.Size.Y.Offset)
 TextboxAsset.Size = UDim2_new(1,0,0,TextboxAsset.Title.Size.Y.Offset + TextboxAsset.Background.Size.Y.Offset)
 end)
-Cheat:Event(TextboxAsset.Background.Input:GetPropertyChangedSignal("Text"), function()
+Utility:Event(TextboxAsset.Background.Input:GetPropertyChangedSignal("Text"), function()
 local TextBounds = GetTextBounds(
 TextboxAsset.Background.Input.Text,
 TextboxAsset.Background.Input.Font.Name,
@@ -803,23 +803,23 @@ TextboxAsset.Background.Size = UDim2_new(1,0,0,TextBounds.Y + 2)
 TextboxAsset.Size = UDim2_new(1,0,0,TextboxAsset.Title.Size.Y.Offset + TextboxAsset.Background.Size.Y.Offset)
 end)
 
-Cheat:Event(TextboxAsset.Background.Input.Focused, function()
+Utility:Event(TextboxAsset.Background.Input.Focused, function()
 TextboxAsset.Background.Input.Text = Textbox.Value
 end)
-Cheat:Event(TextboxAsset.Background.Input.FocusLost, function(EnterPressed)
+Utility:Event(TextboxAsset.Background.Input.FocusLost, function(EnterPressed)
 local Input = TextboxAsset.Background.Input
 
 Textbox.EnterPressed = EnterPressed
 Textbox.Value = Input.Text Textbox.EnterPressed = false
 end)
 
-Cheat:Event(Textbox:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Textbox:GetPropertyChangedSignal("Name"), function(Name)
 TextboxAsset.Title.Text = Name
 end)
-Cheat:Event(Textbox:GetPropertyChangedSignal("Placeholder"), function(PlaceHolder)
+Utility:Event(Textbox:GetPropertyChangedSignal("Placeholder"), function(PlaceHolder)
 TextboxAsset.Background.Input.PlaceholderText = PlaceHolder
 end)
-Cheat:Event(Textbox:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(Textbox:GetPropertyChangedSignal("Value"), function(Value)
 local Input = TextboxAsset.Background.Input
 Input.Text = Textbox.AutoClear and "" or Value
 if Textbox.PasswordMode then Input.Text = string_rep(utf8_char(8226),#Input.Text) end
@@ -843,19 +843,19 @@ KeybindAsset.Parent = Parent
 KeybindAsset.Title.Text = Keybind.Name
 KeybindAsset.Value.Text = "[ " .. Keybind.Value .. " ]"
 
-Cheat:Event(KeybindAsset.MouseButton1Click, function()
+Utility:Event(KeybindAsset.MouseButton1Click, function()
 KeybindAsset.Value.Text = "[ ... ]"
 Keybind.WaitingForBind = true
 end)
-Cheat:Event(KeybindAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(KeybindAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 KeybindAsset.Size = UDim2_new(1,0,0,KeybindAsset.Title.TextBounds.Y)
 end)
-Cheat:Event(KeybindAsset.Value:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(KeybindAsset.Value:GetPropertyChangedSignal("TextBounds"), function()
 KeybindAsset.Value.Size = UDim2_new(0,KeybindAsset.Value.TextBounds.X,1,0)
 KeybindAsset.Title.Size = UDim2_new(1,-KeybindAsset.Value.Size.X.Offset,1,0)
 end)
 
-Cheat:Event(UserInputService.InputBegan, function(Input)
+Utility:Event(UserInputService.InputBegan, function(Input)
 local Key = Input.KeyCode.Name
 if Keybind.WaitingForBind and Input.UserInputType.Name == "Keyboard" then
 Keybind.Value = Key
@@ -879,7 +879,7 @@ or Key == "MouseButton3" then
 end
 end
 end)
-Cheat:Event(UserInputService.InputEnded, function(Input)
+Utility:Event(UserInputService.InputEnded, function(Input)
 local Key = Input.KeyCode.Name
 if Input.UserInputType.Name == "Keyboard" then
 if Key == Keybind.Value then
@@ -897,10 +897,10 @@ end
 end
 end)
 
-Cheat:Event(Keybind:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Keybind:GetPropertyChangedSignal("Name"), function(Name)
 KeybindAsset.Title.Text = Name
 end)
-Cheat:Event(Keybind:GetPropertyChangedSignal("Value"), function(Value,OldValue)
+Utility:Event(Keybind:GetPropertyChangedSignal("Value"), function(Value,OldValue)
 if table_find(Keybind.Blacklist,Value) then
 if Keybind.DoNotClear then
 Keybind.Internal.Value = OldValue
@@ -928,15 +928,15 @@ Keybind.WaitingForBind = false
 KeybindAsset.Parent = Parent
 KeybindAsset.Text = "[ " .. Keybind.Value .. " ]"
 
-Cheat:Event(KeybindAsset.MouseButton1Click, function()
+Utility:Event(KeybindAsset.MouseButton1Click, function()
 KeybindAsset.Text = "[ ... ]"
 Keybind.WaitingForBind = true
 end)
-Cheat:Event(KeybindAsset:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(KeybindAsset:GetPropertyChangedSignal("TextBounds"), function()
 KeybindAsset.Size = UDim2_new(0,KeybindAsset.TextBounds.X,1,0)
 end)
 
-Cheat:Event(UserInputService.InputBegan, function(Input)
+Utility:Event(UserInputService.InputBegan, function(Input)
 local Key = Input.KeyCode.Name
 if Keybind.WaitingForBind and Input.UserInputType.Name == "Keyboard" then
 Keybind.Value = Key
@@ -960,7 +960,7 @@ end
 end
 end
 end)
-Cheat:Event(UserInputService.InputEnded, function(Input)
+Utility:Event(UserInputService.InputEnded, function(Input)
 local Key = Input.KeyCode.Name
 if Input.UserInputType.Name == "Keyboard" then
 if Key == Keybind.Value then
@@ -978,7 +978,7 @@ end
 end
 end)
 
-Cheat:Event(Keybind:GetPropertyChangedSignal("Value"), function(Value,OldValue)
+Utility:Event(Keybind:GetPropertyChangedSignal("Value"), function(Value,OldValue)
 if table_find(Keybind.Blacklist,Value) then
 if Keybind.DoNotClear then
 Keybind.Internal.Value = OldValue
@@ -1008,7 +1008,7 @@ OptionContainerAsset.Parent = ScreenAsset
 DropdownAsset.Title.Text = Dropdown.Name
 DropdownAsset.Title.Visible = not Dropdown.HideName
 
-Cheat:Event(DropdownAsset.MouseButton1Click, function()
+Utility:Event(DropdownAsset.MouseButton1Click, function()
 	if not OptionContainerAsset.Visible and OptionContainerAsset.ListLayout.AbsoluteContentSize.Y ~= 0 then
 		ContainerRender = RunService.RenderStepped:Connect(function()
 			if not OptionContainerAsset.Visible then ContainerRender:Disconnect() end
@@ -1027,14 +1027,14 @@ Cheat:Event(DropdownAsset.MouseButton1Click, function()
 		OptionContainerAsset.Visible = false
 	end
 end)
-Cheat:Event(DropdownAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(DropdownAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 DropdownAsset.Title.Size = Dropdown.HideName and UDim2_fromScale(1,0)
 or UDim2_new(1,0,0,DropdownAsset.Title.TextBounds.Y + 2)
 
 DropdownAsset.Background.Position = UDim2_new(0.5,0,0,DropdownAsset.Title.Size.Y.Offset)
 DropdownAsset.Size = UDim2_new(1,0,0,DropdownAsset.Title.Size.Y.Offset + DropdownAsset.Background.Size.Y.Offset)
 end)
-Cheat:Event(OptionContainerAsset.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+Utility:Event(OptionContainerAsset.ListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 OptionContainerAsset.CanvasSize = UDim2_fromOffset(0,OptionContainerAsset.ListLayout.AbsoluteContentSize.Y + 4)
 end)
 local function RefreshSelected()
@@ -1078,17 +1078,17 @@ Option.ColorConfig = {Option.Value,"BackgroundColor3"}
 Window.Colorable[OptionAsset.Tick] = Option.ColorConfig
 if AddToList then table_insert(Dropdown.List,Option) end
 
-Cheat:Event(OptionAsset.MouseButton1Click, function()
+Utility:Event(OptionAsset.MouseButton1Click, function()
 Option.Value = not Option.Value
 end)
-Cheat:Event(OptionAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(OptionAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 OptionAsset.Layout.Size = UDim2_new(1,-OptionAsset.Title.TextBounds.X - 22,1,0)
 end)
 
-Cheat:Event(Option:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Option:GetPropertyChangedSignal("Name"), function(Name)
 OptionAsset.Title.Text = Name
 end)
-Cheat:Event(	Option:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(	Option:GetPropertyChangedSignal("Value"), function(Value)
 if Option.Mode == "Button" then
 for Index,OldOption in pairs(Dropdown.List) do
 SetValue(OldOption.Internal,false)
@@ -1166,10 +1166,10 @@ function Dropdown:Clear()
 	Dropdown:BulkAdd(Players)
 end
 
-Cheat:Event(Dropdown:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Dropdown:GetPropertyChangedSignal("Name"), function(Name)
 DropdownAsset.Title.Text = Name
 end)
-Cheat:Event(Dropdown:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(Dropdown:GetPropertyChangedSignal("Value"), function(Value)
 if type(Value) ~= "table" then return end
 if #Value == 0 then RefreshSelected() return end
 
@@ -1205,14 +1205,14 @@ PaletteAsset.Rainbow.Tick.BackgroundColor3 = Colorpicker.Value[5]
 and Window.Color or Color3_fromRGB(60,60,60)
 
 
-Cheat:Event(ColorpickerAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
+Utility:Event(ColorpickerAsset.Title:GetPropertyChangedSignal("TextBounds"), function()
 ColorpickerAsset.Size = UDim2_new(1,0,0,ColorpickerAsset.Title.TextBounds.Y)
 end)
 
-Cheat:Event(ColorpickerAsset.MouseButton1Click, function()
+Utility:Event(ColorpickerAsset.MouseButton1Click, function()
 if not PaletteAsset.Visible then
 	PaletteAsset.Visible = true
-	PaletteRender = Cheat:Event(RunService.RenderStepped, function()
+	PaletteRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then PaletteRender:Disconnect() end
 	PaletteAsset.Position = UDim2_fromOffset(
 	(ColorpickerAsset.Color.AbsolutePosition.X - PaletteAsset.AbsoluteSize.X) + 21,
@@ -1224,16 +1224,16 @@ else
 end
 end)
 
-Cheat:Event(PaletteAsset.Rainbow.MouseButton1Click, function()
+Utility:Event(PaletteAsset.Rainbow.MouseButton1Click, function()
 Colorpicker.Value[5] = not Colorpicker.Value[5]
 Colorpicker.ColorConfig[1] = Colorpicker.Value[5]
 PaletteAsset.Rainbow.Tick.BackgroundColor3 = Colorpicker.Value[5]
 and Window.Color or Color3_fromRGB(60,60,60)
 end)
-Cheat:Event(PaletteAsset.SVPicker.InputBegan, function(Input)
+Utility:Event(PaletteAsset.SVPicker.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if SVRender then SVRender:Disconnect() end
-	SVRender = Cheat:Event(RunService.RenderStepped, function()
+	SVRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then SVRender:Disconnect() end
 	local Mouse = UserInputService:GetMouseLocation()
 	local ColorX = math_clamp(Mouse.X - PaletteAsset.SVPicker.AbsolutePosition.X,0,PaletteAsset.SVPicker.AbsoluteSize.X) / PaletteAsset.SVPicker.AbsoluteSize.X
@@ -1245,15 +1245,15 @@ if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	end)
 end
 end)
-Cheat:Event(PaletteAsset.SVPicker.InputEnded, function(Input)
+Utility:Event(PaletteAsset.SVPicker.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if SVRender then SVRender:Disconnect() end
 end
 end)
-Cheat:Event(PaletteAsset.Hue.InputBegan, function(Input)
+Utility:Event(PaletteAsset.Hue.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if HueRender then HueRender:Disconnect() end
-	HueRender = Cheat:Event(RunService.RenderStepped, function()
+	HueRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then HueRender:Disconnect() end
 	local Mouse = UserInputService:GetMouseLocation()
 	local ColorX = math_clamp(Mouse.X - PaletteAsset.Hue.AbsolutePosition.X,0,PaletteAsset.Hue.AbsoluteSize.X) / PaletteAsset.Hue.AbsoluteSize.X
@@ -1262,15 +1262,15 @@ if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	end)
 end
 end)
-Cheat:Event(PaletteAsset.Hue.InputEnded, function(Input)
+Utility:Event(PaletteAsset.Hue.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if HueRender then HueRender:Disconnect() end
 end
 end)
-Cheat:Event(PaletteAsset.Alpha.InputBegan, function(Input)
+Utility:Event(PaletteAsset.Alpha.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if AlphaRender then AlphaRender:Disconnect() end
-	AlphaRender = Cheat:Event(RunService.RenderStepped, function()
+	AlphaRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then AlphaRender:Disconnect() end
 	local Mouse = UserInputService:GetMouseLocation()
 	local ColorX = math_clamp(Mouse.X - PaletteAsset.Alpha.AbsolutePosition.X,0,PaletteAsset.Alpha.AbsoluteSize.X) / PaletteAsset.Alpha.AbsoluteSize.X
@@ -1279,13 +1279,13 @@ if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	end)
 end
 end)
-Cheat:Event(PaletteAsset.Alpha.InputEnded, function(Input)
+Utility:Event(PaletteAsset.Alpha.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if AlphaRender then AlphaRender:Disconnect() end
 end
 end)
 
-Cheat:Event(PaletteAsset.RGB.RGBBox.FocusLost, function(Enter)
+Utility:Event(PaletteAsset.RGB.RGBBox.FocusLost, function(Enter)
 if not Enter then return end
 local ColorString = string_split(string_gsub(PaletteAsset.RGB.RGBBox.Text," ",""),",")
 local Hue,Saturation,Value = Color3_fromRGB(ColorString[1],ColorString[2],ColorString[3]):ToHSV()
@@ -1295,7 +1295,7 @@ Colorpicker.Value[2] = Saturation
 Colorpicker.Value[3] = Value
 Colorpicker.Value = Colorpicker.Value
 end)
-Cheat:Event(PaletteAsset.HEX.HEXBox.FocusLost, function(Enter)
+Utility:Event(PaletteAsset.HEX.HEXBox.FocusLost, function(Enter)
 if not Enter then return end
 local Hue,Saturation,Value = Color3_fromHex("#" .. PaletteAsset.HEX.HEXBox.Text):ToHSV()
 PaletteAsset.RGB.RGBBox.Text = ""
@@ -1305,7 +1305,7 @@ Colorpicker.Value[3] = Value
 Colorpicker.Value = Colorpicker.Value
 end)
 
-Cheat:Event(RunService.Heartbeat, function()
+Utility:Event(RunService.Heartbeat, function()
 if Colorpicker.Value[5] then
 	if PaletteAsset.Visible then
 		Colorpicker.Value[1] = Window.RainbowHue
@@ -1320,10 +1320,10 @@ if Colorpicker.Value[5] then
 end
 end)
 
-Cheat:Event(Colorpicker:GetPropertyChangedSignal("Name"), function(Name)
+Utility:Event(Colorpicker:GetPropertyChangedSignal("Name"), function(Name)
 ColorpickerAsset.Title.Text = Name
 end)
-Cheat:Event(Colorpicker:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(Colorpicker:GetPropertyChangedSignal("Value"), function(Value)
 Value[6] = TableToColor(Value)
 Colorpicker.ColorConfig[1] = Colorpicker.Value[5]
 ColorpickerAsset.Color.BackgroundColor3 = Value[6]
@@ -1363,10 +1363,10 @@ PaletteAsset.Parent = ScreenAsset
 PaletteAsset.Rainbow.Tick.BackgroundColor3 = Colorpicker.Value[5]
 and Window.Color or Color3_fromRGB(60,60,60)
 
-Cheat:Event(ColorpickerAsset.MouseButton1Click, function()
+Utility:Event(ColorpickerAsset.MouseButton1Click, function()
 if not PaletteAsset.Visible then
 	PaletteAsset.Visible = true
-	PaletteRender = Cheat:Event(RunService.RenderStepped, function()
+	PaletteRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then PaletteRender:Disconnect() end
 	PaletteAsset.Position = UDim2_fromOffset(
 	(ColorpickerAsset.AbsolutePosition.X - PaletteAsset.AbsoluteSize.X) + 21,
@@ -1378,16 +1378,16 @@ else
 end
 end)
 
-Cheat:Event(PaletteAsset.Rainbow.MouseButton1Click, function()
+Utility:Event(PaletteAsset.Rainbow.MouseButton1Click, function()
 Colorpicker.Value[5] = not Colorpicker.Value[5]
 Colorpicker.ColorConfig[1] = Colorpicker.Value[5]
 PaletteAsset.Rainbow.Tick.BackgroundColor3 = Colorpicker.Value[5]
 and Window.Color or Color3_fromRGB(60,60,60)
 end)
-Cheat:Event(PaletteAsset.SVPicker.InputBegan, function(Input)
+Utility:Event(PaletteAsset.SVPicker.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if SVRender then SVRender:Disconnect() end
-	SVRender = Cheat:Event(RunService.RenderStepped, function()
+	SVRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then SVRender:Disconnect() end
 	local Mouse = UserInputService:GetMouseLocation()
 	local ColorX = math_clamp(Mouse.X - PaletteAsset.SVPicker.AbsolutePosition.X,0,PaletteAsset.SVPicker.AbsoluteSize.X) / PaletteAsset.SVPicker.AbsoluteSize.X
@@ -1399,15 +1399,15 @@ if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	end)
 end
 end)
-Cheat:Event(PaletteAsset.SVPicker.InputEnded, function(Input)
+Utility:Event(PaletteAsset.SVPicker.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if SVRender then SVRender:Disconnect() end
 end
 end)
-Cheat:Event(PaletteAsset.Hue.InputBegan, function(Input)
+Utility:Event(PaletteAsset.Hue.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if HueRender then HueRender:Disconnect() end
-	HueRender = Cheat:Event(RunService.RenderStepped, function()
+	HueRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then HueRender:Disconnect() end
 	local Mouse = UserInputService:GetMouseLocation()
 	local ColorX = math_clamp(Mouse.X - PaletteAsset.Hue.AbsolutePosition.X,0,PaletteAsset.Hue.AbsoluteSize.X) / PaletteAsset.Hue.AbsoluteSize.X
@@ -1416,15 +1416,15 @@ if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	end)
 end
 end)
-Cheat:Event(PaletteAsset.Hue.InputEnded, function(Input)
+Utility:Event(PaletteAsset.Hue.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if HueRender then HueRender:Disconnect() end
 end
 end)
-Cheat:Event(PaletteAsset.Alpha.InputBegan, function(Input)
+Utility:Event(PaletteAsset.Alpha.InputBegan, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if AlphaRender then AlphaRender:Disconnect() end
-	AlphaRender = Cheat:Event(RunService.RenderStepped, function()
+	AlphaRender = Utility:Event(RunService.RenderStepped, function()
 	if not PaletteAsset.Visible then AlphaRender:Disconnect() end
 	local Mouse = UserInputService:GetMouseLocation()
 	local ColorX = math_clamp(Mouse.X - PaletteAsset.Alpha.AbsolutePosition.X,0,PaletteAsset.Alpha.AbsoluteSize.X) / PaletteAsset.Alpha.AbsoluteSize.X
@@ -1433,13 +1433,13 @@ if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	end)
 end
 end)
-Cheat:Event(PaletteAsset.Alpha.InputEnded, function(Input)
+Utility:Event(PaletteAsset.Alpha.InputEnded, function(Input)
 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 	if AlphaRender then AlphaRender:Disconnect() end
 end
 end)
 
-Cheat:Event(PaletteAsset.RGB.RGBBox.FocusLost, function(Enter)
+Utility:Event(PaletteAsset.RGB.RGBBox.FocusLost, function(Enter)
 if not Enter then return end
 local ColorString = string_split(string_gsub(PaletteAsset.RGB.RGBBox.Text," ",""),",")
 local Hue,Saturation,Value = Color3_fromRGB(ColorString[1],ColorString[2],ColorString[3]):ToHSV()
@@ -1449,7 +1449,7 @@ Colorpicker.Value[2] = Saturation
 Colorpicker.Value[3] = Value
 Colorpicker.Value = Colorpicker.Value
 end)
-Cheat:Event(PaletteAsset.HEX.HEXBox.FocusLost, function(Enter)
+Utility:Event(PaletteAsset.HEX.HEXBox.FocusLost, function(Enter)
 if not Enter then return end
 local Hue,Saturation,Value = Color3_fromHex("#" .. PaletteAsset.HEX.HEXBox.Text):ToHSV()
 PaletteAsset.RGB.RGBBox.Text = ""
@@ -1459,7 +1459,7 @@ Colorpicker.Value[3] = Value
 Colorpicker.Value = Colorpicker.Value
 end)
 
-Cheat:Event(RunService.Heartbeat, function()
+Utility:Event(RunService.Heartbeat, function()
 if Colorpicker.Value[5] then
 	if PaletteAsset.Visible then
 		Colorpicker.Value[1] = Window.RainbowHue
@@ -1473,7 +1473,7 @@ if Colorpicker.Value[5] then
 	end
 end
 end)
-Cheat:Event(Colorpicker:GetPropertyChangedSignal("Value"), function(Value)
+Utility:Event(Colorpicker:GetPropertyChangedSignal("Value"), function(Value)
 Value[6] = TableToColor(Value)
 Colorpicker.ColorConfig[1] = Colorpicker.Value[5]
 ColorpickerAsset.BackgroundColor3 = Value[6]
@@ -1891,7 +1891,7 @@ if Notification.Duration then
 	end
 	end)
 else
-	Cheat:Event(NotificationAsset.Title.Close.MouseButton1Click, function()
+	Utility:Event(NotificationAsset.Title.Close.MouseButton1Click, function()
 	NotificationAsset:Destroy()
 	end)
 end
