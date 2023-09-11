@@ -1496,7 +1496,7 @@ function Bracket:Window(Window)
 		local TabAsset = Assets:Tab(Bracket.ScreenAsset,WindowAsset,Window,Tab)
 
 		function Tab:AddConfigSection(FolderName,Side)
-			local ConfigSection = Tab:Section({Name = "Config System",Side = Side}) do
+			local ConfigSection = Tab:Section({Name = "Configs",Side = Side}) do
 				local ConfigList,ConfigDropdown = ConfigsToList(FolderName),nil
 				local ALConfig = Window:GetAutoLoadConfig(FolderName)
 
