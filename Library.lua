@@ -63,12 +63,17 @@ function Utility:Unload()
     for Index, Value in pairs(Utility.Drawings) do
         Index:Remove()
     end
+	--
+	RunService:SetRobloxGuiFocused(false)
     --
 	Utility.Drawings = nil
 	Utility.Screens = nil
     Utility.Events = nil
 	--
     Utility.Unload = nil
+	--
+	Utility = nil
+	Library = nil
 end
 --
 local function GetAsset(AssetPath)
