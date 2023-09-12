@@ -1974,6 +1974,7 @@ function Bracket:QueueNotification(Name, Duration, Color, Callback)
 	local Notification = {
 		LastCount = 1,
 		Count = 1,
+		Tweening = true,
 		--
 		Name = Name,
 		Duration = ((Duration or 5) + 0.25),
@@ -1990,16 +1991,15 @@ function Bracket:QueueNotification(Name, Duration, Color, Callback)
 			UDim2_fromOffset(X, Y),
 			Enum.EasingDirection.InOut,
 			Enum.EasingStyle.Linear,
-			0.25,false,Callback
+			0.2,false,Callback
 		)
 	end
 	--
 	function Notification:Update()
-		if Notification.Count ~= Notification.LastCount then
+		if Notification.Count ~= Notification.LastCount and not Notification.Finished then
 			Notification.Item.Main.Title.Text = (Notification.Name .. " ( " .. Notification.Count .. " )")
 			--
 			Notification.Item.Main.Size = UDim2_fromOffset(Notification.Item.Main.Title.TextBounds.X + 10, Notification.Item.Main.Title.TextBounds.Y + 6)
-			Notification.Item.Size = UDim2_fromOffset(0, Notification.Item.Main.Size.Y.Offset + 4)
 			--
 			Notification.LastCount = Notification.Count
 		end
@@ -2008,7 +2008,9 @@ function Bracket:QueueNotification(Name, Duration, Color, Callback)
 	Notifications.Last = Notification
 	Notifications.Queue[Notification] = true
 	--
-	Notification:Tween(Notification.Item.Main.Size.X.Offset + 4, Notification.Item.Main.Size.Y.Offset + 4)
+	Notification:Tween(Notification.Item.Main.Size.X.Offset + 4, Notification.Item.Main.Size.Y.Offset + 4, function()
+		Notification.Tweening = false
+	end)
 end
 --
 Utility:Event(RunService.Heartbeat, function()
@@ -2025,6 +2027,8 @@ Utility:Event(RunService.Heartbeat, function()
 			if Notifications.Last == Notification then
 				Notifications.Last = nil
 			end
+			--
+			Notification.Tweening = true
 			--
 			Notification:Tween(0, Notification.Item.Main.Size.Y.Offset + 4, function()
 				Notification.Item:Destroy()
