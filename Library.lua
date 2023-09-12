@@ -1922,12 +1922,13 @@ NotificationAsset.ListLayout.AbsoluteContentSize.Y + 8
 if Notification.Duration then
 	warn(Notification.Duration)
 	Utility:Thread(function()
+		warn("hi")
 		for Time = Notification.Duration,1,-1 do
 			NotificationAsset.Title.Close.Text = Time
 			task_wait(1)
 		end
 		NotificationAsset.Title.Close.Text = 0
-
+		warn("asafasf")
 		NotificationAsset:Destroy()
 		if Notification.Callback then
 			Notification.Callback()
