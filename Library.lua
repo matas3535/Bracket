@@ -36,6 +36,8 @@ function Utility:Event(Type, Function)
 	function Event:Disconnect()
 		Event.Connection:Disconnect()
 		--
+		Utility.Events[Event] = nil
+		--
 		Event.Connection = nil
 		Event.Function = nil
 		Event.Disconnect = nil
