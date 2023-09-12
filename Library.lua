@@ -301,6 +301,7 @@ function Assets:Window(ScreenAsset,Window)
 	WindowAsset.Parent = ScreenAsset
 	WindowAsset.Visible = Window.Enabled
 	WindowAsset.Title.Text = Window.Name
+	WindowAsset.Version.Text = Window.Version
 	WindowAsset.Position = Window.Position
 	WindowAsset.Size = Window.Size
 
@@ -1535,6 +1536,7 @@ function Bracket:Window(Window)
 Window = GetType(Window,{},"table",true)
 Window.Blur = GetType(Window.Blur,false,"boolean")
 Window.Name = GetType(Window.Name,"Window","string")
+Window.Version = GetType(Window.Version,"","string")
 Window.Enabled = GetType(Window.Enabled,true,"boolean")
 Window.Color = GetType(Window.Color,Color3_new(1,0.5,0.25),"Color3")
 Window.Size = GetType(Window.Size,UDim2_new(0,496,0,496),"UDim2")
