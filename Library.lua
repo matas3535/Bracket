@@ -1964,7 +1964,7 @@ local Notifications = {
 }
 --
 function Bracket:QueueNotification(Name, Duration, Color, Callback)
-	if Notifications.Last.Name == Name then
+	if Notifications.Last and Notifications.Last.Name == Name then
 		Notifications.Last.Count += 1
 		Notification.Last.Tick = tick()
 		--
