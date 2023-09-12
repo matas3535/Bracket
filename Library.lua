@@ -302,7 +302,7 @@ function Assets:Window(ScreenAsset,Window)
 
 	Utility:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
 	WindowAsset.Visible = Enabled
-	warn(Enabled, Window.Blur)
+	
 	RunService:SetRobloxGuiFocused(Enabled and Window.Blur)
 
 	if not Enabled then
