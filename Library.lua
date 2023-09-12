@@ -2012,6 +2012,10 @@ Utility:Event(RunService.Heartbeat, function()
 		if (Tick - Notification.Tick) >= Notification.Duration then
 			Notifications.Queue[Notification] = nil
 			--
+			if Notifications.Last == Notification then
+				Notifications.Last = nil
+			end
+			--
 			Notification:Tween(0, Notification.Item.Main.Size.Y.Offset + 4, function()
 				Notification.Item:Destroy()
 				--
