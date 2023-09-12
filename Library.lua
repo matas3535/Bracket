@@ -1973,7 +1973,7 @@ function Bracket:QueueNotification(Name, Duration, Color, Callback)
 		Count = 1,
 		--
 		Name = Name,
-		Duration = ((Duration or 5) + 0.25)
+		Duration = ((Duration or 5) + 0.25),
 		Callback = Callback,
 		--
 		Item = Bracket:Notification2({
