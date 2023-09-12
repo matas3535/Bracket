@@ -2007,7 +2007,7 @@ Utility:Event(RunService.Heartbeat, function()
 			Notifications.Queue[Notification] = nil
 			--
 			Notification:Tween(0, NotificationAsset.Main.Size.Y.Offset + 4, function()
-				NotificationAsset:Destroy()
+				Notification.Item:Destroy()
 				--
 				if Notification.Callback then
 					Notification.Callback()
