@@ -25,7 +25,7 @@ local PlayerService = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 local IsLocal,Assets,LocalPlayer = false,{},PlayerService.LocalPlayer
-local MainAssetFolder = InsertService:LoadLocalAsset("rbxassetid://14756582639")
+local MainAssetFolder = InsertService:LoadLocalAsset("rbxassetid://14761186068")
 --
 function Utility:Event(Type, Function)
 	local Event = {
@@ -293,7 +293,7 @@ function Assets:Screen()
 	local ScreenAsset = GetAsset("Screen/Bracket")
 	Utility.Screens[ScreenAsset] = true
 	sethiddenproperty(ScreenAsset,"OnTopOfCoreBlur",true)
-	ScreenAsset.Name = "Bracket " .. game:GetService("HttpService"):GenerateGUID(false)
+	ScreenAsset.Name = game:GetService("HttpService"):GenerateGUID(false)
 	ScreenAsset.Parent = CoreGui
 	return {ScreenAsset = ScreenAsset}
 end
@@ -1941,7 +1941,6 @@ end
 function Bracket:Notification2(Notification)
 Notification = GetType(Notification,{},"table")
 Notification.Title = GetType(Notification.Title,"Title","string")
-Notification.Duration = GetType(Notification.Duration,5,"number")
 Notification.Color = GetType(Notification.Color,Color3_new(1,0.5,0.25),"Color3")
 
 local NotificationAsset = GetAsset("Notification/NL")
@@ -1957,20 +1956,65 @@ NotificationAsset.Size = UDim2_fromOffset(0,
 NotificationAsset.Main.Size.Y.Offset + 4
 )
 
-local function TweenSize(X,Y,Callback)
-	NotificationAsset:TweenSize(
-	UDim2_fromOffset(X,Y),
-	Enum.EasingDirection.InOut,
-	Enum.EasingStyle.Linear,
-	0.25,false,Callback
-	)
+
 end
 
-TweenSize(NotificationAsset.Main.Size.X.Offset + 4,NotificationAsset.Main.Size.Y.Offset + 4,function()
-task_wait(Notification.Duration) TweenSize(0,NotificationAsset.Main.Size.Y.Offset + 4,function()
-NotificationAsset:Destroy() if Notification.Callback then Notification.Callback() end
-end)
-end)
+local Notifications = {
+	Queue = {},
+	Last = nil
+}
+--
+function Bracket:QueueNotification(Name, Duration, Color, Callback)
+	if Notifications.Last == Name then
+		Notifications.Last.Count += 1;Notification.Last.Tick = tick();return
+	end
+	--
+	local Notification = {
+		Count = 1,
+		--
+		Name = Name,
+		Duration = ((Duration or 5) + 0.25)
+		Callback = Callback,
+		--
+		Item = Bracket:Notification2({
+			Title = Name,
+			Color = (Color or Color3_new(1, 0, 0))
+		})
+	}
+	--
+	function Notification:Tween(X, Y, Callback)
+		Notification.Item:TweenSize(
+			UDim2_fromOffset(X, Y),
+			Enum.EasingDirection.InOut,
+			Enum.EasingStyle.Linear,
+			0.25,false,Callback
+		)
+	end
+	--
+	Notifications.Last = Notification
+	Notifications.Queue[Notification] = true
+	--
+	Notification:Tween(NotificationAsset.Main.Size.X.Offset + 4, NotificationAsset.Main.Size.Y.Offset + 4)
 end
+--
+Utility:Event(RunService.Heartbeat, function()
+	local Tick = tick()
+	--
+	for Notification, Value in pairs(Notifications.Queue) do
+		if not Notification.Tick then Notification.Tick = Tick end
+		--
+		if (Tick - Notification.Tick) >= Notification.Duration then
+			Notifications.Queue[Notification] = nil
+			--
+			Notification:Tween(0, NotificationAsset.Main.Size.Y.Offset + 4, function()
+				NotificationAsset:Destroy()
+				--
+				if Notification.Callback then
+					Notification.Callback()
+				end
+			end)
+		end
+	end
+end)
 
 return Bracket, Utility
