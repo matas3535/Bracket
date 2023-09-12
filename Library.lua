@@ -1544,7 +1544,7 @@ Window.Version = GetType(Window.Version,"","string")
 Window.Enabled = GetType(Window.Enabled,true,"boolean")
 Window.Color = GetType(Window.Color,Color3_new(1,0.5,0.25),"Color3")
 Window.Size = GetType(Window.Size,UDim2_new(0,496,0,496),"UDim2")
-Window.Position = GetType(Window.Position,UDim2_new(0.5,-(Window.Size.X.Offset / 2),0.5,-(Window.Size.Y.Offset / 2)),"UDim2")
+Window.Position = GetType(Window.Position,UDim2_new(1,-Window.Size.X.Offset - 50,0.5,-(Window.Size.Y.Offset / 2)),"UDim2")
 local WindowAsset = Assets:Window(Bracket.ScreenAsset,Window)
 
 function Window:Tab(Tab)
