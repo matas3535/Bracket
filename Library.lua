@@ -1996,7 +1996,7 @@ function Bracket:QueueNotification(Name, Duration, Color, Callback)
 	Notifications.Last = Notification
 	Notifications.Queue[Notification] = true
 	--
-	Notification:Tween(NotificationAsset.Main.Size.X.Offset + 4, NotificationAsset.Main.Size.Y.Offset + 4)
+	Notification:Tween(Notification.Item.Main.Size.X.Offset + 4, Notification.Item.Main.Size.Y.Offset + 4)
 end
 --
 Utility:Event(RunService.Heartbeat, function()
