@@ -1955,8 +1955,7 @@ NotificationAsset.Main.Title.TextBounds.Y + 6
 NotificationAsset.Size = UDim2_fromOffset(0,
 NotificationAsset.Main.Size.Y.Offset + 4
 )
-
-
+return NotificationAsset
 end
 
 local Notifications = {
@@ -1965,8 +1964,11 @@ local Notifications = {
 }
 --
 function Bracket:QueueNotification(Name, Duration, Color, Callback)
-	if Notifications.Last == Name then
-		Notifications.Last.Count += 1;Notification.Last.Tick = tick();return
+	if Notifications.Last.Name == Name then
+		Notifications.Last.Count += 1
+		Notification.Last.Tick = tick()
+		--
+		return
 	end
 	--
 	local Notification = {
@@ -2003,6 +2005,10 @@ Utility:Event(RunService.Heartbeat, function()
 	for Notification, Value in pairs(Notifications.Queue) do
 		if not Notification.Tick then Notification.Tick = Tick end
 		--
+		if Notification.Count > 1 then
+			Notification.Item.Main.Title.Text = (Notification.Name .. " ( " .. Notification.Count .. " )")
+		end
+		--
 		if (Tick - Notification.Tick) >= Notification.Duration then
 			Notifications.Queue[Notification] = nil
 			--
@@ -2016,5 +2022,5 @@ Utility:Event(RunService.Heartbeat, function()
 		end
 	end
 end)
-
+--
 return Bracket, Utility
