@@ -1,4 +1,3 @@
-warn("Lib v:", "1.03")
 local Color3_fromHex, Color3_fromHSV, Color3_fromRGB, Color3_new, Instance_new, math_clamp, math_floor, os_clock, Random_new, string_find, string_format, string_gsub, string_rep, string_split, table_clear, table_concat, table_find, table_remove, task_spawn, task_wait, UDim2_fromScale, utf8_char, tonumber, loadstring, delfile, UDim2_new, sethiddenproperty, tostring, readfile, writefile, isfile, listfiles, makefolder, isfolder, math_max, OnStop, OnTick, UDim2_fromOffset, Vector2_new, setmetatable, ipairs, table_insert, typeof, type, pairs = Color3.fromHex, Color3.fromHSV, Color3.fromRGB, Color3.new, Instance.new, math.clamp, math.floor, os.clock, Random.new, string.find, string.format, string.gsub, string.rep, string.split, table.clear, table.concat, table.find, table.remove, task.spawn, task.wait, UDim2.fromScale, utf8.char, tonumber, loadstring, delfile, UDim2.new, sethiddenproperty, tostring, readfile, writefile, isfile, listfiles, makefolder, isfolder, math.max, OnStop, OnTick, UDim2.fromOffset, Vector2.new, setmetatable, ipairs, table.insert, typeof, type, pairs
 --
 local Utility = {
@@ -11,6 +10,7 @@ local Utility = {
 		{"Floral", "rbxassetid://5553946656"},
 		{"Christmas", "rbxassetid://11711560928"}
 	},
+	Drawings = {},
 	Screens = {},
 	Events = {}
 }
@@ -45,6 +45,30 @@ function Utility:Event(Type, Function)
 	Utility.Events[Event] = true
 	--
 	return Event
+end
+--
+function Utility:Unload()
+	for Index, Value in pairs(Utility.Events) do
+        Index:Disconnect()
+    end
+	--
+	if Utility.Custom and typeof(Utility.Custom) == "table" then
+		Utility.Custom()
+	end
+    --
+	for Index, Value in pairs(Utility.Screens) do
+		Index:Remove()
+	end
+	--
+    for Index, Value in pairs(Utility.Drawings) do
+        Index:Remove()
+    end
+    --
+	Utility.Drawings = nil
+	Utility.Screens = nil
+    Utility.Events = nil
+	--
+    Utility.Unload = nil
 end
 --
 local function GetAsset(AssetPath)
@@ -302,7 +326,7 @@ function Assets:Window(ScreenAsset,Window)
 
 	Utility:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
 	WindowAsset.Visible = Enabled
-	
+
 	RunService:SetRobloxGuiFocused(Enabled and Window.Blur)
 
 	if not Enabled then
