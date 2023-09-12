@@ -1996,14 +1996,11 @@ function Bracket:QueueNotification(Name, Duration, Color, Callback)
 	end
 	--
 	function Notification:Update()
-		if Notification.Count ~= Notification.LastCount and Notification.Tweening then
-			warn("cant update cuz of tween thiggy")
-		end
-		--
 		if Notification.Count ~= Notification.LastCount and not Notification.Tweening then
 			Notification.Item.Main.Title.Text = (Notification.Name .. " ( " .. Notification.Count .. " )")
 			--
 			Notification.Item.Main.Size = UDim2_fromOffset(Notification.Item.Main.Title.TextBounds.X + 10, Notification.Item.Main.Title.TextBounds.Y + 6)
+			Notification.Item.Size = UDim2_fromOffset(Notification.Item.Main.Size.X.Offset + 4, Notification.Item.Main.Size.Y.Offset + 4)
 			--
 			Notification.LastCount = Notification.Count
 		end
