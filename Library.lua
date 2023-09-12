@@ -302,9 +302,9 @@ function Assets:Window(ScreenAsset,Window)
 
 	Utility:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
 	WindowAsset.Visible = Enabled
-
+	warn(Enabled, Window.Blur)
 	RunService:SetRobloxGuiFocused(Enabled and Window.Blur)
-	
+
 	if not Enabled then
 		for Index,Object in pairs(ScreenAsset:GetChildren()) do
 			if Object.Name == "Palette" or Object.Name == "OptionContainer" then
