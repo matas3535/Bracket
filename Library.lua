@@ -301,7 +301,6 @@ function Assets:Window(ScreenAsset,Window)
 	WindowAsset.Parent = ScreenAsset
 	WindowAsset.Visible = Window.Enabled
 	WindowAsset.Title.Text = Window.Name
-	WindowAsset.ToolTip.Visible = false
 	WindowAsset.Version.Text = Window.Version
 	WindowAsset.Position = Window.Position
 	WindowAsset.Size = Window.Size
