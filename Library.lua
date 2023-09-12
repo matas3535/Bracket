@@ -11,6 +11,7 @@ local Utility = {
 		{"Floral", "rbxassetid://5553946656"},
 		{"Christmas", "rbxassetid://11711560928"}
 	},
+	Screens = {},
 	Events = {}
 }
 --
@@ -253,11 +254,13 @@ local function ConfigsToList(FolderName)
 	return Configs
 end
 
-function Assets:Screen() local ScreenAsset = GetAsset("Screen/Bracket")
-	if not IsLocal then sethiddenproperty(ScreenAsset,"OnTopOfCoreBlur",true) end
+function Assets:Screen()
+	local ScreenAsset = GetAsset("Screen/Bracket")
+	Utility.Screens[ScreenAsset] = true
+	sethiddenproperty(ScreenAsset,"OnTopOfCoreBlur",true)
 	ScreenAsset.Name = "Bracket " .. game:GetService("HttpService"):GenerateGUID(false)
-	ScreenAsset.Parent = IsLocal and LocalPlayer:FindFirstChildOfClass("PlayerGui") or CoreGui
-	return {ScreenAsset = ScreenAsset,TableToColor = TableToColor}
+	ScreenAsset.Parent = CoreGui
+	return {ScreenAsset = ScreenAsset}
 end
 function Assets:Window(ScreenAsset,Window)
 	local WindowAsset = GetAsset("Window/Window")
@@ -300,7 +303,8 @@ function Assets:Window(ScreenAsset,Window)
 	Utility:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
 	WindowAsset.Visible = Enabled
 
-	if not IsLocal then RunService:SetRobloxGuiFocused(Enabled and Window.Blur) end
+	RunService:SetRobloxGuiFocused(Enabled and Window.Blur)
+	
 	if not Enabled then
 		for Index,Object in pairs(ScreenAsset:GetChildren()) do
 			if Object.Name == "Palette" or Object.Name == "OptionContainer" then
