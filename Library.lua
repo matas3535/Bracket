@@ -25,7 +25,7 @@ local PlayerService = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 local IsLocal,Assets,LocalPlayer = false,{},PlayerService.LocalPlayer
-local MainAssetFolder = InsertService:LoadLocalAsset("rbxassetid://14756570088")
+local MainAssetFolder = InsertService:LoadLocalAsset("rbxassetid://14756582639")
 --
 function Utility:Event(Type, Function)
 	local Event = {
@@ -302,11 +302,7 @@ function Assets:Window(ScreenAsset,Window)
 	WindowAsset.Visible = Window.Enabled
 	WindowAsset.Title.Text = Window.Name
 	WindowAsset.ToolTip.Visible = false
-	if WindowAsset:FindFirstChild("Version") then
 	WindowAsset.Version.Text = Window.Version
-	else
-		warn("no version")
-	end
 	WindowAsset.Position = Window.Position
 	WindowAsset.Size = Window.Size
 
