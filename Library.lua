@@ -54,8 +54,8 @@ function Utility:Unload()
         Index:Disconnect()
     end
 	--
-	if Utility.Custom and typeof(Utility.Custom) == "table" then
-		Utility.Custom()
+	if Utility.Custom and typeof(Utility.Custom) == "function" then
+		pcall(Utility.Custom)
 	end
     --
 	for Index, Value in pairs(Utility.Screens) do
