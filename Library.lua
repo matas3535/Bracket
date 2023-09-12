@@ -49,6 +49,10 @@ function Utility:Event(Type, Function)
 	return Event
 end
 --
+function Utility:Thread(Function)
+	return coroutine.wrap(Function)
+end
+--
 function Utility:Unload()
 	for Index, Value in pairs(Utility.Events) do
         Index:Disconnect()
@@ -1916,17 +1920,17 @@ NotificationAsset.ListLayout.AbsoluteContentSize.Y + 8
 )
 
 if Notification.Duration then
-	task_spawn(function()
-	for Time = Notification.Duration,1,-1 do
-		NotificationAsset.Title.Close.Text = Time
-		task_wait(1)
-	end
-	NotificationAsset.Title.Close.Text = 0
+	Utility:Thread(function()
+		for Time = Notification.Duration,1,-1 do
+			NotificationAsset.Title.Close.Text = Time
+			task_wait(1)
+		end
+		NotificationAsset.Title.Close.Text = 0
 
-	NotificationAsset:Destroy()
-	if Notification.Callback then
-		Notification.Callback()
-	end
+		NotificationAsset:Destroy()
+		if Notification.Callback then
+			Notification.Callback()
+		end
 	end)
 else
 	Utility:Event(NotificationAsset.Title.Close.MouseButton1Click, function()
