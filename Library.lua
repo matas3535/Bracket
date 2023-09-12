@@ -301,6 +301,7 @@ function Assets:Window(ScreenAsset,Window)
 	WindowAsset.Parent = ScreenAsset
 	WindowAsset.Visible = Window.Enabled
 	WindowAsset.Title.Text = Window.Name
+	WindowAsset.ToolTip.Visible = false
 	if WindowAsset:FindFirstChild("Version") then
 	WindowAsset.Version.Text = Window.Version
 	else
