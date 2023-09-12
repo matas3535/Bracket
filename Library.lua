@@ -1920,6 +1920,7 @@ NotificationAsset.ListLayout.AbsoluteContentSize.Y + 8
 )
 
 if Notification.Duration then
+	warn(Notification.Duration)
 	Utility:Thread(function()
 		for Time = Notification.Duration,1,-1 do
 			NotificationAsset.Title.Close.Text = Time
