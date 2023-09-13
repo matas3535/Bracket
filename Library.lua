@@ -49,8 +49,8 @@ function Utility:Event(Type, Function)
 	return Event
 end
 --
-function Utility:Thread(Function)
-	return coroutine_wrap(Function)()
+function Utility:Thread(Function, ...)
+	return coroutine_wrap(Function)(...)
 end
 --
 function Utility:Unload()
