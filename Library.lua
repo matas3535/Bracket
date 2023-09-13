@@ -50,7 +50,7 @@ function Utility:Event(Type, Function)
 end
 --
 function Utility:Thread(Function, ...)
-	return coroutine_wrap(Function)(...)
+	return coroutine_wrap(pcall)(Function, ...)
 end
 --
 function Utility:Unload()
