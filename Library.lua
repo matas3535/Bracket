@@ -50,6 +50,7 @@ function Utility:Event(Type, Function)
 end
 --
 function Utility:Thread(Function, ...)
+	warn(Function, ...)
 	return coroutine_wrap(Function)(...)
 end
 --
