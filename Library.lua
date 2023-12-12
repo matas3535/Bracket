@@ -339,7 +339,7 @@ function Assets:Window(ScreenAsset,Window)
 	Utility:Event(Window:GetPropertyChangedSignal("Enabled"), function(Enabled)
 	WindowAsset.Visible = Enabled
 
-	RunService:SetRobloxGuiFocused(Enabled and Window.Blur)
+	if sethiddenproperty then RunService:SetRobloxGuiFocused(Enabled and Window.Blur) end
 
 	if not Enabled then
 		for Index,Object in pairs(ScreenAsset:GetChildren()) do
@@ -349,9 +349,11 @@ function Assets:Window(ScreenAsset,Window)
 		end
 	end
 	end)
+	if sethiddenproperty then 
 	Utility:Event(Window:GetPropertyChangedSignal("Blur"), function(Blur)
 	if not IsLocal then RunService:SetRobloxGuiFocused(Window.Enabled and Blur) end
 	end)
+	end
 	Utility:Event(Window:GetPropertyChangedSignal("Name"), function(Name)
 	WindowAsset.Title.Text = Name
 	end)
