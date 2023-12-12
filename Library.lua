@@ -292,7 +292,7 @@ end
 function Assets:Screen()
 	local ScreenAsset = GetAsset("Screen/Bracket")
 	Utility.Screens[ScreenAsset] = true
-	sethiddenproperty(ScreenAsset,"OnTopOfCoreBlur",true)
+	if sethiddenproperty then sethiddenproperty(ScreenAsset,"OnTopOfCoreBlur",true) end
 	ScreenAsset.Name = game:GetService("HttpService"):GenerateGUID(false)
 	ScreenAsset.Parent = CoreGui
 	return {ScreenAsset = ScreenAsset}
